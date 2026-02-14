@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学术诚信检查器 - Academic Integrity Checker</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>学术诚信检查器</h1>
+            <p>上传论文或输入 DOI / arXiv ID / URL，全面检测学术不端行为</p>
+        </header>
+
+        <!-- 上传区域 -->
+        <div class="upload-section">
+            <div class="tabs">
+                <button class="tab active" data-tab="upload">上传文件</button>
+                <button class="tab" data-tab="doi">DOI</button>
+                <button class="tab" data-tab="arxiv">arXiv</button>
+                <button class="tab" data-tab="url">URL</button>
+            </div>
+
+            <form id="analyzeForm" enctype="multipart/form-data">
+                <!-- 文件上传 -->
+                <div class="tab-content active" id="tab-upload">
+                    <div class="drop-zone" id="dropZone">
+                        <div class="icon">&#128196;</div>
+                        <p>拖拽文件到此处，或点击选择文件</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.3rem;">支持 PDF、DOCX、TXT 格式</p>
+                        <div class="file-name" id="fileName"></div>
+                    </div>
+                    <input type="file" id="fileInput" name="file" accept=".pdf,.docx,.doc,.txt" style="display:none">
+                </div>
+
+                <!-- DOI 输入 -->
+                <div class="tab-content" id="tab-doi">
+                    <label class="label">输入 DOI 标识符</label>
+                    <div class="input-group">
+                        <input type="text" name="doi" id="doiInput"
+                               placeholder="例: 10.1038/s41586-023-06600-9">
+                    </div>
+                </div>
+
+                <!-- arXiv 输入 -->
+                <div class="tab-content" id="tab-arxiv">
+                    <label class="label">输入 arXiv ID</label>
+                    <div class="input-group">
+                        <input type="text" name="arxiv_id" id="arxivInput"
+                               placeholder="例: 2301.07041">
+                    </div>
+                </div>
+
+                <!-- URL 输入 -->
+                <div class="tab-content" id="tab-url">
+                    <label class="label">输入论文 PDF 的直接链接</label>
+                    <div class="input-group">
+                        <input type="text" name="url" id="urlInput"
+                               placeholder="例: https://example.com/paper.pdf">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-block" id="submitBtn">
+                    开始分析
+                </button>
+            </form>
+        </div>
+
+        <!-- 错误提示 -->
+        <div class="error-msg" id="errorMsg"></div>
+
+        <!-- 加载动画 -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在分析论文，请稍候...</p>
+            <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">
+                将依次进行：文本查重、引用核查、图片取证、统计验证、元数据检查
+            </p>
+        </div>
+
+        <!-- 分析报告 -->
+        <div class="report" id="report">
+            <div class="report-header">
+                <div class="report-title" id="reportTitle">分析报告</div>
+                <div class="stats-row" id="statsRow"></div>
+            </div>
+            <div id="moduleResults"></div>
+        </div>
+
+        <footer>
+            <p>开源学术诚信检查器 | 本工具仅供辅助参考，不构成最终学术评判依据</p>
+            <p style="margin-top: 0.3rem;">
+                基于 ELA图片取证 / GRIM统计检验 / CrossRef引用验证 等开源技术
+            </p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

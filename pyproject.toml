@@ -1,0 +1,11 @@
+[project]
+name = "academic-integrity-checker"
+version = "1.0.0"
+description = "Open-source academic paper integrity checker - detect plagiarism, image manipulation, citation issues, and statistical inconsistencies"
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.backends._legacy:_Backend"
