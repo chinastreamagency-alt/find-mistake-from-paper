@@ -149,6 +149,12 @@ function initAnalyzeForm() {
                 return;
             }
 
+            if (data.status === 'need_upload') {
+                // 找不到文献 PDF，引导用户手动上传
+                showNeedUpload(data.message, data.title || '');
+                return;
+            }
+
             if (data.status === 'partial') {
                 showError(data.message);
                 return;
@@ -169,6 +175,36 @@ function initAnalyzeForm() {
         }
     });
 }
+
+function showNeedUpload(message, title) {
+    const errorMsg = document.getElementById('errorMsg');
+    const loading = document.getElementById('loading');
+    const submitBtn = document.getElementById('submitBtn');
+
+    loading.classList.remove('active');
+    submitBtn.disabled = false;
+
+    // 显示提示信息
+    errorMsg.innerHTML = `
+        <div style="margin-bottom:0.5rem">${escapeHtml(message)}</div>
+        ${title ? `<div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:0.5rem">已识别文献: <strong style="color:var(--text)">${escapeHtml(title)}</strong></div>` : ''}
+        <button class="btn btn-sm" onclick="switchToUploadTab()" style="margin-top:0.3rem">切换到上传文件</button>
+    `;
+    errorMsg.classList.add('active');
+}
+
+window.switchToUploadTab = function() {
+    // 切换到上传 tab
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    const uploadTab = document.querySelector('.tab[data-tab="upload"]');
+    if (uploadTab) uploadTab.classList.add('active');
+    document.getElementById('tab-upload').classList.add('active');
+    // 关闭错误提示
+    document.getElementById('errorMsg').classList.remove('active');
+    // 聚焦到拖拽区
+    document.getElementById('dropZone').scrollIntoView({ behavior: 'smooth', block: 'center' });
+};
 
 function showError(msg) {
     const errorMsg = document.getElementById('errorMsg');

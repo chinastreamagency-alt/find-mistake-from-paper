@@ -104,33 +104,58 @@ async def analyze_paper(
 
     elif doi:
         paper_source = f"DOI: {doi}"
-        result = await fetch_from_doi(doi.strip())
-        paper_metadata = result.get("metadata", {})
-        pdf_path = result.get("pdf_path")
+        try:
+            result = await fetch_from_doi(doi.strip())
+            paper_metadata = result.get("metadata", {})
+            pdf_path = result.get("pdf_path")
+        except Exception:
+            paper_metadata = {}
+            pdf_path = None
         if not pdf_path:
-            # Return metadata-only analysis
+            title = paper_metadata.get("title", "")
             return JSONResponse({
-                "status": "partial",
-                "message": f"已获取 DOI 元数据，但无法下载开放获取PDF。仅进行元数据分析。",
+                "status": "need_upload",
+                "message": f"无法自动获取该文献的 PDF（可能非开放获取），请手动上传文件后重试。",
+                "title": title,
                 "metadata": paper_metadata,
-                "report": None,
+                "source": paper_source,
             })
 
     elif arxiv_id:
         paper_source = f"arXiv: {arxiv_id}"
-        result = await fetch_from_arxiv(arxiv_id.strip())
-        paper_metadata = result.get("metadata", {})
-        pdf_path = result.get("pdf_path")
+        try:
+            result = await fetch_from_arxiv(arxiv_id.strip())
+            paper_metadata = result.get("metadata", {})
+            pdf_path = result.get("pdf_path")
+        except Exception:
+            paper_metadata = {}
+            pdf_path = None
         if not pdf_path:
-            raise HTTPException(400, f"无法从 arXiv 下载论文: {arxiv_id}")
+            title = paper_metadata.get("title", "")
+            return JSONResponse({
+                "status": "need_upload",
+                "message": f"无法从 arXiv 下载论文 PDF，请手动上传文件后重试。",
+                "title": title,
+                "metadata": paper_metadata,
+                "source": paper_source,
+            })
 
     elif url:
         paper_source = f"URL: {url}"
-        result = await fetch_from_url(url.strip())
-        paper_metadata = result.get("metadata", {})
-        pdf_path = result.get("pdf_path")
+        try:
+            result = await fetch_from_url(url.strip())
+            paper_metadata = result.get("metadata", {})
+            pdf_path = result.get("pdf_path")
+        except Exception:
+            paper_metadata = {}
+            pdf_path = None
         if not pdf_path:
-            raise HTTPException(400, f"无法从 URL 下载论文")
+            return JSONResponse({
+                "status": "need_upload",
+                "message": f"无法从该 URL 下载文件，请手动上传 PDF 后重试。",
+                "metadata": paper_metadata,
+                "source": paper_source,
+            })
 
     else:
         raise HTTPException(400, "请上传文件或提供 DOI / arXiv ID / URL")
