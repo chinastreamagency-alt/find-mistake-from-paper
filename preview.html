@@ -3,108 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>学术诚信检查器 - 预览</title>
+    <title>学术诚信检查器 - 完整预览</title>
     <style>
         :root {
-            --bg: #0f1117;
-            --bg-card: #1a1d27;
-            --bg-input: #232733;
-            --border: #2d3348;
-            --text: #e4e6f0;
-            --text-muted: #8b8fa3;
-            --accent: #6c8aff;
-            --accent-hover: #8ba3ff;
-            --confirmed: #ff4d6a;
-            --confirmed-bg: rgba(255, 77, 106, 0.12);
-            --suspicious: #ffb84d;
-            --suspicious-bg: rgba(255, 184, 77, 0.12);
-            --info: #4dc9ff;
-            --info-bg: rgba(77, 201, 255, 0.12);
-            --success: #4dff88;
-            --success-bg: rgba(77, 255, 136, 0.08);
-            --radius: 12px;
+            --bg: #0f1117; --bg-card: #1a1d27; --bg-input: #232733;
+            --border: #2d3348; --text: #e4e6f0; --text-muted: #8b8fa3;
+            --accent: #6c8aff; --accent-hover: #8ba3ff;
+            --confirmed: #ff4d6a; --confirmed-bg: rgba(255,77,106,0.12);
+            --suspicious: #ffb84d; --suspicious-bg: rgba(255,184,77,0.12);
+            --info: #4dc9ff; --info-bg: rgba(77,201,255,0.12);
+            --success: #4dff88; --success-bg: rgba(77,255,136,0.08);
+            --radius: 12px; --shadow: 0 4px 24px rgba(0,0,0,0.3);
         }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; }
         .container { max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem; }
+        .topnav { display: flex; justify-content: space-between; align-items: center; padding: 0.8rem 0; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+        .topnav-brand { font-size: 1rem; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .topnav-links { display: flex; align-items: center; gap: 0.8rem; }
+        .topnav-links a { color: var(--text-muted); text-decoration: none; font-size: 0.9rem; cursor: pointer; }
+        .topnav-links a:hover { color: var(--text); }
+        .nav-credits { font-size: 0.8rem; padding: 0.25rem 0.7rem; border-radius: 12px; background: var(--success-bg); color: var(--success); border: 1px solid rgba(77,255,136,0.2); }
         header { text-align: center; padding: 2rem 0 1.5rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-        header h1 {
-            font-size: 1.8rem; font-weight: 700; margin-bottom: 0.4rem;
-            background: linear-gradient(135deg, var(--accent), #a78bfa);
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-        }
+        header h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: 0.4rem; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
         header p { color: var(--text-muted); font-size: 0.95rem; }
-        .upload-section {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem;
-        }
+        .btn { padding: 0.75rem 2rem; background: var(--accent); color: #fff; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem; }
+        .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
+        .btn-block { width: 100%; justify-content: center; margin-top: 1rem; }
+        .btn-sm { padding: 0.4rem 1rem; font-size: 0.85rem; border-radius: 6px; }
+        .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); background: transparent; }
+        .btn-ghost { background: transparent; color: var(--text-muted); padding: 0.4rem 0.8rem; }
+        .upload-section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem; }
         .tabs { display: flex; gap: 0; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); }
-        .tab {
-            padding: 0.7rem 1.2rem; background: none; border: none; color: var(--text-muted);
-            cursor: pointer; font-size: 0.9rem; border-bottom: 2px solid transparent; transition: all 0.2s;
-        }
+        .tab { padding: 0.7rem 1.2rem; background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.9rem; border-bottom: 2px solid transparent; transition: all 0.2s; }
         .tab:hover { color: var(--text); }
         .tab.active { color: var(--accent); border-bottom-color: var(--accent); }
         .tab-content { display: none; }
         .tab-content.active { display: block; }
-        .drop-zone {
-            border: 2px dashed var(--border); border-radius: var(--radius);
-            padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.3s;
-        }
-        .drop-zone:hover { border-color: var(--accent); background: rgba(108, 138, 255, 0.05); }
+        .drop-zone { border: 2px dashed var(--border); border-radius: var(--radius); padding: 3rem 2rem; text-align: center; cursor: pointer; transition: all 0.3s; }
+        .drop-zone:hover { border-color: var(--accent); background: rgba(108,138,255,0.05); }
         .drop-zone .icon { font-size: 2.5rem; margin-bottom: 0.8rem; opacity: 0.6; }
         .drop-zone p { color: var(--text-muted); font-size: 0.9rem; }
-        .drop-zone .file-name { color: var(--accent); font-weight: 500; margin-top: 0.5rem; }
         .input-group { display: flex; gap: 0.8rem; margin-top: 0.5rem; }
-        .input-group input {
-            flex: 1; padding: 0.75rem 1rem; background: var(--bg-input);
-            border: 1px solid var(--border); border-radius: 8px; color: var(--text);
-            font-size: 0.95rem; outline: none; transition: border-color 0.2s;
-        }
-        .input-group input:focus { border-color: var(--accent); }
-        .input-group input::placeholder { color: var(--text-muted); }
+        .input-group input, .form-group input { flex: 1; padding: 0.75rem 1rem; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.95rem; outline: none; }
+        .input-group input:focus, .form-group input:focus { border-color: var(--accent); }
+        .input-group input::placeholder, .form-group input::placeholder { color: var(--text-muted); }
         .label { display: block; color: var(--text-muted); font-size: 0.85rem; margin-bottom: 0.4rem; }
-        .btn {
-            padding: 0.75rem 2rem; background: var(--accent); color: #fff; border: none;
-            border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer;
-            transition: all 0.2s; display: inline-flex; align-items: center; gap: 0.5rem;
-        }
-        .btn:hover { background: var(--accent-hover); transform: translateY(-1px); }
-        .btn-block { width: 100%; justify-content: center; margin-top: 1rem; }
-        .report-header {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 1.5rem;
-        }
+        .report-header { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem 2rem; margin-bottom: 1.5rem; }
         .report-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 0.8rem; }
         .stats-row { display: flex; gap: 1rem; flex-wrap: wrap; }
-        .stat-badge {
-            padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 500;
-        }
+        .stat-badge { padding: 0.4rem 1rem; border-radius: 20px; font-size: 0.85rem; font-weight: 500; }
         .stat-badge.confirmed { background: var(--confirmed-bg); color: var(--confirmed); border: 1px solid rgba(255,77,106,0.25); }
         .stat-badge.suspicious { background: var(--suspicious-bg); color: var(--suspicious); border: 1px solid rgba(255,184,77,0.25); }
         .stat-badge.info { background: var(--info-bg); color: var(--info); border: 1px solid rgba(77,201,255,0.25); }
-        .risk-indicator {
-            display: inline-block; padding: 0.3rem 0.8rem; border-radius: 6px;
-            font-size: 0.8rem; font-weight: 600; text-transform: uppercase; margin-left: 0.5rem;
-        }
+        .risk-indicator { display: inline-block; padding: 0.3rem 0.8rem; border-radius: 6px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; margin-left: 0.5rem; }
         .risk-low { background: var(--success-bg); color: var(--success); }
         .risk-medium { background: var(--suspicious-bg); color: var(--suspicious); }
         .risk-high { background: var(--confirmed-bg); color: var(--confirmed); }
         .risk-critical { background: rgba(255,0,0,0.15); color: #ff3355; }
-        .module-card {
-            background: var(--bg-card); border: 1px solid var(--border);
-            border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden;
-        }
-        .module-header {
-            padding: 1rem 1.5rem; display: flex; justify-content: space-between;
-            align-items: center; cursor: pointer; transition: background 0.2s;
-        }
+        .module-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 1rem; overflow: hidden; }
+        .module-header { padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background 0.2s; }
         .module-header:hover { background: rgba(255,255,255,0.02); }
         .module-name { font-weight: 600; font-size: 1rem; }
         .module-summary { color: var(--text-muted); font-size: 0.85rem; }
@@ -112,303 +71,309 @@
         .module-toggle.open { transform: rotate(180deg); }
         .module-body { display: none; padding: 0 1.5rem 1rem; border-top: 1px solid var(--border); }
         .module-body.open { display: block; }
-        .issue {
-            padding: 1rem; margin: 0.8rem 0; border-radius: 8px; border-left: 3px solid;
-        }
+        .issue { padding: 1rem; margin: 0.8rem 0; border-radius: 8px; border-left: 3px solid; }
         .issue.confirmed { background: var(--confirmed-bg); border-left-color: var(--confirmed); }
         .issue.suspicious { background: var(--suspicious-bg); border-left-color: var(--suspicious); }
         .issue.info { background: var(--info-bg); border-left-color: var(--info); }
-        .issue-header {
-            display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem;
-        }
+        .issue-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.4rem; }
         .issue-title { font-weight: 600; font-size: 0.9rem; }
-        .issue-severity {
-            font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 4px;
-            font-weight: 500; white-space: nowrap;
-        }
+        .issue-severity { font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: 500; white-space: nowrap; }
         .issue-severity.confirmed { background: var(--confirmed); color: #fff; }
         .issue-severity.suspicious { background: var(--suspicious); color: #000; }
         .issue-severity.info { background: var(--info); color: #000; }
         .issue-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.3rem; }
-        .issue-evidence {
-            font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 0.5rem 0.8rem;
-            border-radius: 4px; margin-top: 0.4rem; font-family: 'SF Mono', 'Fira Code', monospace;
-            white-space: pre-wrap; word-break: break-all; color: var(--text-muted);
-        }
+        .issue-evidence { font-size: 0.8rem; background: rgba(0,0,0,0.3); padding: 0.5rem 0.8rem; border-radius: 4px; margin-top: 0.4rem; font-family: monospace; white-space: pre-wrap; word-break: break-all; color: var(--text-muted); }
         .issue-suggestion { font-size: 0.8rem; color: var(--accent); margin-top: 0.4rem; font-style: italic; }
         .issue-location { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.2rem; }
         .no-issues { padding: 1.5rem; text-align: center; color: var(--success); font-size: 0.9rem; }
-        footer {
-            text-align: center; padding: 2rem 0; color: var(--text-muted);
-            font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 2rem;
-        }
-        @media (max-width: 640px) {
-            .container { padding: 1rem; }
-            header h1 { font-size: 1.4rem; }
-            .tabs { overflow-x: auto; }
-            .tab { font-size: 0.8rem; padding: 0.5rem 0.8rem; white-space: nowrap; }
-            .stats-row { flex-direction: column; gap: 0.5rem; }
-            .input-group { flex-direction: column; }
-            .issue-header { flex-direction: column; gap: 0.3rem; }
-        }
+        /* Modal */
+        .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+        .modal-overlay.active { display: flex; }
+        .modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; width: 100%; max-width: 420px; position: relative; box-shadow: var(--shadow); animation: modalIn 0.2s ease-out; }
+        @keyframes modalIn { from { opacity: 0; transform: translateY(-20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .modal-close { position: absolute; top: 0.8rem; right: 1rem; background: none; border: none; color: var(--text-muted); font-size: 1.5rem; cursor: pointer; }
+        .modal-tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+        .modal-tab { flex: 1; padding: 0.6rem; background: none; border: none; color: var(--text-muted); font-size: 0.95rem; cursor: pointer; border-bottom: 2px solid transparent; }
+        .modal-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+        .modal-form { display: flex; flex-direction: column; gap: 1rem; }
+        .form-group { display: flex; flex-direction: column; gap: 0.3rem; }
+        .form-group label { font-size: 0.85rem; color: var(--text-muted); }
+        .form-group input { padding: 0.7rem 1rem; }
+        .form-error { color: var(--confirmed); font-size: 0.85rem; min-height: 1.2rem; }
+        .form-hint { text-align: center; color: var(--success); font-size: 0.85rem; margin-top: 0.5rem; }
+        /* Pricing */
+        .pricing-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+        .pricing-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem 1.5rem; text-align: center; position: relative; transition: all 0.3s; }
+        .pricing-card:hover { border-color: var(--accent); transform: translateY(-4px); box-shadow: 0 8px 32px rgba(108,138,255,0.15); }
+        .pricing-card.popular { border-color: var(--accent); box-shadow: 0 4px 20px rgba(108,138,255,0.2); }
+        .pricing-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: var(--accent); color: #fff; font-size: 0.75rem; font-weight: 600; padding: 0.2rem 0.8rem; border-radius: 12px; }
+        .pricing-name { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .pricing-price { font-size: 2.2rem; font-weight: 700; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin-bottom: 0.3rem; }
+        .pricing-desc { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.2rem; }
+        .pricing-features { list-style: none; text-align: left; margin-bottom: 1.5rem; }
+        .pricing-features li { padding: 0.3rem 0; font-size: 0.85rem; color: var(--text-muted); }
+        .pricing-features li::before { content: "\2713 "; color: var(--success); margin-right: 0.4rem; }
+        /* Dashboard */
+        .dash-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 2rem; }
+        .dash-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+        .dash-card.wide { grid-column: 1 / -1; }
+        .dash-card-title { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .dash-card-value { font-size: 2.5rem; font-weight: 700; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+        .dash-card-sub { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1rem; }
+        .dash-card-sub strong { color: var(--success); }
+        .referral-link-box { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; }
+        .referral-input { flex: 1; padding: 0.6rem 1rem; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px; color: var(--accent); font-size: 0.85rem; outline: none; }
+        .referral-code-display { font-size: 0.85rem; color: var(--text-muted); }
+        .referral-code-display strong { color: var(--accent); font-size: 1.1rem; letter-spacing: 2px; }
+        .dash-stats { display: flex; flex-direction: column; gap: 0.8rem; }
+        .dash-stat { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; border-bottom: 1px solid var(--border); }
+        .dash-stat:last-child { border-bottom: none; }
+        .dash-stat-label { font-size: 0.85rem; color: var(--text-muted); }
+        .dash-stat-value { font-size: 1rem; font-weight: 600; }
+        footer { text-align: center; padding: 2rem 0; color: var(--text-muted); font-size: 0.8rem; border-top: 1px solid var(--border); margin-top: 2rem; }
+        /* Page nav */
+        .page-nav { display: flex; gap: 0.5rem; justify-content: center; margin-bottom: 1.5rem; }
+        .page-nav button { padding: 0.5rem 1.2rem; background: var(--bg-card); border: 1px solid var(--border); border-radius: 8px; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+        .page-nav button:hover, .page-nav button.active { border-color: var(--accent); color: var(--accent); background: rgba(108,138,255,0.08); }
+        @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; } .dash-grid { grid-template-columns: 1fr; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>学术诚信检查器</h1>
-            <p>上传论文或输入 DOI / arXiv ID / URL，全面检测学术不端行为</p>
-        </header>
-
-        <!-- 上传区域 -->
-        <div class="upload-section">
-            <div class="tabs">
-                <button class="tab active" data-tab="upload" onclick="switchTab('upload')">上传文件</button>
-                <button class="tab" data-tab="doi" onclick="switchTab('doi')">DOI</button>
-                <button class="tab" data-tab="arxiv" onclick="switchTab('arxiv')">arXiv</button>
-                <button class="tab" data-tab="url" onclick="switchTab('url')">URL</button>
+        <nav class="topnav">
+            <div class="topnav-brand">学术诚信检查器</div>
+            <div class="topnav-links">
+                <a onclick="showPage('home')">首页</a>
+                <a onclick="showPage('pricing')">定价</a>
+                <a onclick="showPage('dashboard')">账户</a>
+                <span class="nav-credits">47 次</span>
+                <button class="btn btn-sm btn-outline" onclick="document.getElementById('authModal').classList.add('active')">登录</button>
             </div>
+        </nav>
 
-            <form id="analyzeForm">
+        <!-- 页面切换 -->
+        <div class="page-nav">
+            <button class="active" onclick="showPage('home')">首页+报告</button>
+            <button onclick="showPage('pricing')">定价套餐</button>
+            <button onclick="showPage('dashboard')">用户面板</button>
+            <button onclick="document.getElementById('authModal').classList.add('active')">登录弹窗</button>
+        </div>
+
+        <!-- ===== 首页 ===== -->
+        <div id="pageHome">
+            <header>
+                <h1>学术诚信检查器</h1>
+                <p>上传论文或输入 DOI / arXiv ID / URL，全面检测学术不端行为</p>
+            </header>
+            <div class="upload-section">
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab(this,'upload')">上传文件</button>
+                    <button class="tab" onclick="switchTab(this,'doi')">DOI</button>
+                    <button class="tab" onclick="switchTab(this,'arxiv')">arXiv</button>
+                    <button class="tab" onclick="switchTab(this,'url')">URL</button>
+                </div>
                 <div class="tab-content active" id="tab-upload">
-                    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+                    <div class="drop-zone">
                         <div class="icon">&#128196;</div>
                         <p>拖拽文件到此处，或点击选择文件</p>
-                        <p style="font-size: 0.8rem; margin-top: 0.3rem;">支持 PDF、DOCX、TXT 格式</p>
-                        <div class="file-name" id="fileName"></div>
+                        <p style="font-size:0.8rem;margin-top:0.3rem;">支持 PDF、DOCX、TXT 格式</p>
                     </div>
-                    <input type="file" id="fileInput" accept=".pdf,.docx,.doc,.txt" style="display:none">
                 </div>
                 <div class="tab-content" id="tab-doi">
                     <label class="label">输入 DOI 标识符</label>
-                    <div class="input-group">
-                        <input type="text" placeholder="例: 10.1038/s41586-023-06600-9">
-                    </div>
+                    <div class="input-group"><input type="text" placeholder="例: 10.1038/s41586-023-06600-9"></div>
                 </div>
                 <div class="tab-content" id="tab-arxiv">
                     <label class="label">输入 arXiv ID</label>
-                    <div class="input-group">
-                        <input type="text" placeholder="例: 2301.07041">
-                    </div>
+                    <div class="input-group"><input type="text" placeholder="例: 2301.07041"></div>
                 </div>
                 <div class="tab-content" id="tab-url">
                     <label class="label">输入论文 PDF 的直接链接</label>
-                    <div class="input-group">
-                        <input type="text" placeholder="例: https://example.com/paper.pdf">
-                    </div>
+                    <div class="input-group"><input type="text" placeholder="例: https://example.com/paper.pdf"></div>
                 </div>
-                <button type="button" class="btn btn-block" onclick="showMockReport()">开始分析</button>
-            </form>
+                <button class="btn btn-block" onclick="showMockReport()">开始分析</button>
+            </div>
+            <div id="reportArea"></div>
         </div>
 
-        <!-- 报告区域 -->
-        <div id="reportArea"></div>
+        <!-- ===== 定价 ===== -->
+        <div id="pagePricing" style="display:none">
+            <header>
+                <h1>选择套餐</h1>
+                <p>购买分析次数，开始检查你的论文</p>
+            </header>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-name">基础版 Basic</div>
+                    <div class="pricing-price">$9.90</div>
+                    <div class="pricing-desc">10 次论文分析</div>
+                    <ul class="pricing-features">
+                        <li>全部 5 大检测模块</li>
+                        <li>支持 PDF / DOCX / TXT</li>
+                        <li>DOI / arXiv / URL 导入</li>
+                    </ul>
+                    <button class="btn btn-block">购买</button>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="pricing-badge">最受欢迎</div>
+                    <div class="pricing-name">专业版 Pro</div>
+                    <div class="pricing-price">$29.90</div>
+                    <div class="pricing-desc">50 次论文分析</div>
+                    <ul class="pricing-features">
+                        <li>全部 5 大检测模块</li>
+                        <li>支持 PDF / DOCX / TXT</li>
+                        <li>DOI / arXiv / URL 导入</li>
+                        <li>优先处理队列</li>
+                    </ul>
+                    <button class="btn btn-block">购买</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-name">无限版 Unlimited</div>
+                    <div class="pricing-price">$99.90</div>
+                    <div class="pricing-desc">999 次论文分析</div>
+                    <ul class="pricing-features">
+                        <li>全部 5 大检测模块</li>
+                        <li>支持 PDF / DOCX / TXT</li>
+                        <li>DOI / arXiv / URL 导入</li>
+                        <li>优先处理队列</li>
+                        <li>API 接入（即将推出）</li>
+                    </ul>
+                    <button class="btn btn-block">购买</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 用户面板 ===== -->
+        <div id="pageDashboard" style="display:none">
+            <header>
+                <h1>我的账户</h1>
+                <p>demo@example.com</p>
+            </header>
+            <div class="dash-grid">
+                <div class="dash-card">
+                    <div class="dash-card-title">剩余分析次数</div>
+                    <div class="dash-card-value">47</div>
+                    <button class="btn btn-sm" style="margin-top:0.8rem" onclick="showPage('pricing')">购买更多</button>
+                </div>
+                <div class="dash-card wide">
+                    <div class="dash-card-title">推广返佣</div>
+                    <p class="dash-card-sub">分享你的专属链接，好友每次付费你获得 <strong>20%</strong> 返佣</p>
+                    <div class="referral-link-box">
+                        <input type="text" class="referral-input" value="https://checker.example.com/?ref=K8M2NX4P" readonly>
+                        <button class="btn btn-sm">复制</button>
+                    </div>
+                    <div class="referral-code-display">你的推广码: <strong>K8M2NX4P</strong></div>
+                </div>
+                <div class="dash-card">
+                    <div class="dash-card-title">推广统计</div>
+                    <div class="dash-stats">
+                        <div class="dash-stat"><span class="dash-stat-label">推荐人数</span><span class="dash-stat-value">12</span></div>
+                        <div class="dash-stat"><span class="dash-stat-label">总佣金</span><span class="dash-stat-value">$23.80</span></div>
+                        <div class="dash-stat"><span class="dash-stat-label">待结算</span><span class="dash-stat-value">$5.98</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <footer>
             <p>开源学术诚信检查器 | 本工具仅供辅助参考，不构成最终学术评判依据</p>
-            <p style="margin-top: 0.3rem;">基于 ELA图片取证 / GRIM统计检验 / CrossRef引用验证 等开源技术</p>
+            <p style="margin-top:0.3rem;">基于 ELA图片取证 / GRIM统计检验 / CrossRef引用验证 等开源技术</p>
         </footer>
     </div>
 
+    <!-- 登录弹窗 -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" onclick="document.getElementById('authModal').classList.remove('active')">&times;</button>
+            <div class="modal-tabs">
+                <button class="modal-tab active" onclick="switchModalTab(this,'login')">登录</button>
+                <button class="modal-tab" onclick="switchModalTab(this,'register')">注册</button>
+            </div>
+            <form class="modal-form" id="modalLogin">
+                <div class="form-group"><label>邮箱</label><input type="email" placeholder="your@email.com"></div>
+                <div class="form-group"><label>密码</label><input type="password" placeholder="输入密码"></div>
+                <div class="form-error"></div>
+                <button type="button" class="btn btn-block" onclick="document.getElementById('authModal').classList.remove('active')">登录</button>
+            </form>
+            <form class="modal-form" id="modalRegister" style="display:none">
+                <div class="form-group"><label>邮箱</label><input type="email" placeholder="your@email.com"></div>
+                <div class="form-group"><label>密码（至少6位）</label><input type="password" placeholder="设置密码"></div>
+                <div class="form-group"><label>姓名（选填）</label><input type="text" placeholder="你的姓名"></div>
+                <div class="form-group"><label>推广码（选填）</label><input type="text" placeholder="好友的推广码" value="K8M2NX4P"></div>
+                <div class="form-error"></div>
+                <button type="button" class="btn btn-block" onclick="document.getElementById('authModal').classList.remove('active')">注册</button>
+                <p class="form-hint">注册即赠送 3 次免费分析</p>
+            </form>
+        </div>
+    </div>
+
     <script>
-    function switchTab(name) {
+    function showPage(name) {
+        document.getElementById('pageHome').style.display = name === 'home' ? '' : 'none';
+        document.getElementById('pagePricing').style.display = name === 'pricing' ? '' : 'none';
+        document.getElementById('pageDashboard').style.display = name === 'dashboard' ? '' : 'none';
+        document.querySelectorAll('.page-nav button').forEach((b,i) => {
+            b.classList.toggle('active', (i===0&&name==='home')||(i===1&&name==='pricing')||(i===2&&name==='dashboard'));
+        });
+    }
+    function switchTab(el, name) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.querySelector(`.tab[data-tab="${name}"]`).classList.add('active');
+        el.classList.add('active');
         document.getElementById(`tab-${name}`).classList.add('active');
     }
-
-    function toggleModule(idx) {
-        const body = document.getElementById(`mod-body-${idx}`);
-        const toggle = document.getElementById(`mod-toggle-${idx}`);
-        body.classList.toggle('open');
-        toggle.classList.toggle('open');
+    function switchModalTab(el, name) {
+        document.querySelectorAll('.modal-tab').forEach(t => t.classList.remove('active'));
+        el.classList.add('active');
+        document.getElementById('modalLogin').style.display = name === 'login' ? '' : 'none';
+        document.getElementById('modalRegister').style.display = name === 'register' ? '' : 'none';
     }
-
-    const mockReport = {
-        paper_title: "基于深度学习的蛋白质结构预测：方法与应用",
-        paper_source: "protein_prediction_2024.pdf",
-        overall_risk: "critical",
-        total_confirmed: 5,
-        total_suspicious: 4,
-        total_info: 2,
-        module_results: [
-            {
-                module_name: "文本查重 / Plagiarism Detection",
-                summary: "1 个确凿问题；2 个可疑问题",
-                issues: [
-                    {
-                        severity: "confirmed", confidence: 0.85,
-                        title: "内部文本重复 / Internal text duplication",
-                        description: "第3页和第12页存在高度相似的段落（相似度: 87.3%）",
-                        location: "Page 3 & Page 12",
-                        evidence: "段落1: We propose a novel deep learning architecture that leverages attention mechanisms to predict...\n段落2: We propose a novel deep learning architecture that leverages attention mechanisms to predict...",
-                        suggestion: "检查是否为不当的自我引用或重复段落"
-                    },
-                    {
-                        severity: "suspicious", confidence: 0.50,
-                        title: "写作风格突变 / Writing style inconsistency",
-                        description: "第7页到第8页之间写作风格发生显著变化",
-                        location: "Page 7-8",
-                        evidence: "平均句长变化: 18.2 → 32.5, 词汇丰富度变化: 0.72 → 0.45",
-                        suggestion: "写作风格的突然变化可能暗示拼凑或代写，建议核查"
-                    },
-                    {
-                        severity: "suspicious", confidence: 0.70,
-                        title: "过度直接引用 / Excessive direct quotation",
-                        description: "论文中直接引用内容占比过高 (18.5%)，共发现 12 段直接引用",
-                        suggestion: "考虑用自己的语言重述部分引用内容，并注明出处"
-                    }
-                ]
-            },
-            {
-                module_name: "引用检查 / Citation Verification",
-                summary: "共检查 47 条参考文献；2 个确凿问题；1 个可疑问题",
-                issues: [
-                    {
-                        severity: "confirmed", confidence: 0.90,
-                        title: "引用 [23] 在参考文献中缺失 / Citation [23] missing from references",
-                        description: "正文中引用了 [23]，但参考文献列表中未找到该条目",
-                        suggestion: "添加缺失的参考文献或修正引用编号"
-                    },
-                    {
-                        severity: "confirmed", confidence: 0.95,
-                        title: "参考文献 [31] 年份异常 / Reference [31] has future year",
-                        description: "参考文献引用了未来的年份 2028",
-                        evidence: "[31] Zhang, W. (2028). Advanced protein folding methods. Nature Methods.",
-                        suggestion: "核查并修正该参考文献的出版年份"
-                    },
-                    {
-                        severity: "suspicious", confidence: 0.80,
-                        title: "参考文献 [15] 年份不匹配 / Year mismatch in [15]",
-                        description: "论文中标注年份 2021，但 CrossRef 记录年份为 2019",
-                        evidence: "论文: [15] Li, H. (2021). Neural network architectures...\nCrossRef title: Neural network architectures for biological data",
-                        suggestion: "核对该参考文献的正确出版年份"
-                    }
-                ]
-            },
-            {
-                module_name: "图片取证 / Image Forensics",
-                summary: "共分析 18 张图片；1 个确凿问题；1 个可疑问题",
-                issues: [
-                    {
-                        severity: "confirmed", confidence: 0.96,
-                        title: "图片重复 / Duplicate images detected",
-                        description: "第5页图片2与第9页图片1高度相似 (相关系数: 0.967)",
-                        location: "Page 5 Image 2 & Page 9 Image 1",
-                        suggestion: "检查这两张图片是否为重复使用，如果表示不同数据则为严重问题"
-                    },
-                    {
-                        severity: "suspicious", confidence: 0.62,
-                        title: "疑似图片篡改 (第7页图3) / Possible image manipulation",
-                        description: "ELA分析检测到异常误差分布：可疑区块占比 18.5%，区块标准差 22.3",
-                        location: "Page 7, Image 3",
-                        evidence: "Mean error: 12.34, Max error: 89.23, Suspicious blocks: 28/152",
-                        suggestion: "该图片的误差级别分布不均匀，可能经过局部编辑。建议使用专业工具进一步分析"
-                    }
-                ]
-            },
-            {
-                module_name: "统计一致性检查 / Statistical Consistency",
-                summary: "共检查 8 个统计检验, 3 个均值；1 个确凿问题；1 个可疑问题；1 条信息提示",
-                issues: [
-                    {
-                        severity: "confirmed", confidence: 0.99,
-                        title: "不可能的相关系数 / Impossible correlation coefficient",
-                        description: "相关系数 r = 1.23 超出 [-1, 1] 范围",
-                        evidence: "r = 1.23, p < .001",
-                        suggestion: "相关系数必须在 -1 到 1 之间"
-                    },
-                    {
-                        severity: "suspicious", confidence: 0.60,
-                        title: "p值为零 / p-value reported as zero",
-                        description: "p值报告为 .000 或 0，这在统计学上是不精确的表述",
-                        evidence: "F(3, 196) = 45.67, p = .000",
-                        suggestion: "应报告为 p < .001 而非 p = .000"
-                    },
-                    {
-                        severity: "confirmed", confidence: 0.85,
-                        title: "GRIM检验不通过 / GRIM test failure",
-                        description: "均值 3.47（精度: 2位小数）在样本量 N=30 下数学上不可能",
-                        evidence: "M = 3.47, N = 30",
-                        suggestion: "该均值在给定样本量下不可能出现，请核查原始数据或报告的数值"
-                    }
-                ]
-            },
-            {
-                module_name: "元数据与结构检查 / Metadata & Structure",
-                summary: "2 条信息提示",
-                issues: [
-                    {
-                        severity: "info", confidence: 0.50,
-                        title: "缺少标准章节 / Missing standard sections",
-                        description: "未检测到以下标准章节: conclusion",
-                        suggestion: "标准学术论文通常包含摘要、引言、结论和参考文献等部分"
-                    },
-                    {
-                        severity: "info", confidence: 0.50,
-                        title: "PDF由图像编辑工具创建 / PDF created with image editor",
-                        description: "PDF元数据显示使用了 'adobe photoshop' 创建",
-                        evidence: "Producer: adobe photoshop cc 2024, Creator: adobe photoshop",
-                        suggestion: "学术论文通常使用 LaTeX/Word 生成，使用图像编辑工具可能表明文件经过额外处理"
-                    }
-                ]
-            }
-        ]
-    };
-
+    function toggleModule(idx) {
+        document.getElementById(`mod-body-${idx}`).classList.toggle('open');
+        document.getElementById(`mod-toggle-${idx}`).classList.toggle('open');
+    }
     function showMockReport() {
-        const r = mockReport;
+        const issues = [
+            { mod: "文本查重 / Plagiarism Detection", summary: "1 个确凿问题；2 个可疑问题", issues: [
+                { severity: "confirmed", confidence: 0.85, title: "内部文本重复", description: "第3页和第12页存在高度相似的段落（87.3%）", location: "Page 3 & 12", evidence: "We propose a novel deep learning architecture that leverages attention mechanisms..." },
+                { severity: "suspicious", confidence: 0.50, title: "写作风格突变", description: "第7页到第8页写作风格显著变化", evidence: "句长: 18.2→32.5, 词汇丰富度: 0.72→0.45" },
+                { severity: "suspicious", confidence: 0.70, title: "过度直接引用", description: "直接引用占比 18.5%，共12段", suggestion: "建议用自己的语言重述部分引用" }
+            ]},
+            { mod: "引用检查 / Citation Verification", summary: "检查47条参考文献；2确凿；1可疑", issues: [
+                { severity: "confirmed", confidence: 0.90, title: "引用 [23] 缺失", description: "正文引用了 [23]，但参考文献中未找到" },
+                { severity: "confirmed", confidence: 0.95, title: "参考文献 [31] 年份 2028", description: "引用了未来的年份", evidence: "[31] Zhang, W. (2028). Advanced protein folding methods. Nature Methods." },
+                { severity: "suspicious", confidence: 0.80, title: "参考文献 [15] 年份不匹配", description: "论文标注 2021，CrossRef 为 2019" }
+            ]},
+            { mod: "图片取证 / Image Forensics", summary: "分析18张图片；1确凿；1可疑", issues: [
+                { severity: "confirmed", confidence: 0.96, title: "图片重复", description: "第5页图2与第9页图1高度相似 (0.967)", location: "Page 5 & 9" },
+                { severity: "suspicious", confidence: 0.62, title: "疑似图片篡改 (第7页图3)", description: "ELA异常误差分布：可疑区块 18.5%", evidence: "Mean error: 12.34, Max: 89.23, Suspicious blocks: 28/152" }
+            ]},
+            { mod: "统计一致性 / Statistical Consistency", summary: "8个统计检验, 3个均值；1确凿；1可疑；1信息", issues: [
+                { severity: "confirmed", confidence: 0.99, title: "不可能的相关系数 r = 1.23", description: "超出 [-1, 1] 范围", evidence: "r = 1.23, p < .001" },
+                { severity: "confirmed", confidence: 0.85, title: "GRIM检验不通过", description: "M=3.47 在 N=30 下数学上不可能", evidence: "M = 3.47, N = 30" },
+                { severity: "suspicious", confidence: 0.60, title: "p值为零", description: "p值报告为 .000", evidence: "F(3, 196) = 45.67, p = .000", suggestion: "应报告为 p < .001" }
+            ]},
+            { mod: "元数据与结构 / Metadata & Structure", summary: "2 条信息提示", issues: [
+                { severity: "info", confidence: 0.50, title: "缺少标准章节", description: "未检测到: conclusion" },
+                { severity: "info", confidence: 0.50, title: "PDF由图像编辑工具创建", description: "Producer: adobe photoshop cc 2024", evidence: "Producer: adobe photoshop cc 2024, Creator: adobe photoshop" }
+            ]}
+        ];
         const sevLabel = { confirmed: '确凿', suspicious: '可疑', info: '信息' };
-
-        let html = `
-        <div class="report-header">
-            <div class="report-title">
-                ${r.paper_title}
-                <span class="risk-indicator risk-${r.overall_risk}">风险等级: ${{low:'低',medium:'中',high:'高',critical:'极高'}[r.overall_risk]}</span>
-            </div>
-            <div class="stats-row">
-                <span class="stat-badge confirmed">确凿问题: ${r.total_confirmed}</span>
-                <span class="stat-badge suspicious">可疑问题: ${r.total_suspicious}</span>
-                <span class="stat-badge info">信息提示: ${r.total_info}</span>
-            </div>
-        </div>`;
-
-        r.module_results.forEach((mod, idx) => {
-            const hasIssues = mod.issues.length > 0;
-            html += `
-            <div class="module-card">
-                <div class="module-header" onclick="toggleModule(${idx})">
-                    <div>
-                        <div class="module-name">${mod.module_name}</div>
-                        <div class="module-summary">${mod.summary}</div>
-                    </div>
-                    <span class="module-toggle ${hasIssues?'open':''}" id="mod-toggle-${idx}">&#9660;</span>
-                </div>
-                <div class="module-body ${hasIssues?'open':''}" id="mod-body-${idx}">
-                    ${hasIssues ? mod.issues.map(iss => `
-                        <div class="issue ${iss.severity}">
-                            <div class="issue-header">
-                                <div class="issue-title">${iss.title}</div>
-                                <span class="issue-severity ${iss.severity}">${sevLabel[iss.severity]} (${(iss.confidence*100).toFixed(0)}%)</span>
-                            </div>
-                            <div class="issue-desc">${iss.description}</div>
-                            ${iss.location ? `<div class="issue-location">位置: ${iss.location}</div>` : ''}
-                            ${iss.evidence ? `<div class="issue-evidence">${iss.evidence}</div>` : ''}
-                            ${iss.suggestion ? `<div class="issue-suggestion">建议: ${iss.suggestion}</div>` : ''}
-                        </div>
-                    `).join('') : '<div class="no-issues">&#10003; 未发现问题</div>'}
-                </div>
-            </div>`;
+        let html = `<div class="report-header"><div class="report-title">基于深度学习的蛋白质结构预测：方法与应用 <span class="risk-indicator risk-critical">风险等级: 极高</span></div><div class="stats-row"><span class="stat-badge confirmed">确凿问题: 5</span><span class="stat-badge suspicious">可疑问题: 4</span><span class="stat-badge info">信息提示: 2</span></div></div>`;
+        issues.forEach((m, idx) => {
+            html += `<div class="module-card"><div class="module-header" onclick="toggleModule(${idx})"><div><div class="module-name">${m.mod}</div><div class="module-summary">${m.summary}</div></div><span class="module-toggle open" id="mod-toggle-${idx}">&#9660;</span></div><div class="module-body open" id="mod-body-${idx}">`;
+            m.issues.forEach(iss => {
+                html += `<div class="issue ${iss.severity}"><div class="issue-header"><div class="issue-title">${iss.title}</div><span class="issue-severity ${iss.severity}">${sevLabel[iss.severity]} (${(iss.confidence*100).toFixed(0)}%)</span></div><div class="issue-desc">${iss.description}</div>`;
+                if (iss.location) html += `<div class="issue-location">位置: ${iss.location}</div>`;
+                if (iss.evidence) html += `<div class="issue-evidence">${iss.evidence}</div>`;
+                if (iss.suggestion) html += `<div class="issue-suggestion">建议: ${iss.suggestion}</div>`;
+                html += '</div>';
+            });
+            html += '</div></div>';
         });
-
         document.getElementById('reportArea').innerHTML = html;
     }
-
-    // 页面加载后自动展示模拟报告
-    window.addEventListener('load', () => {
-        setTimeout(showMockReport, 300);
-    });
+    window.addEventListener('load', () => setTimeout(showMockReport, 200));
     </script>
 </body>
 </html>

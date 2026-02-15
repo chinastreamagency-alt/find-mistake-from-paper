@@ -5,10 +5,11 @@ import uuid
 import shutil
 from pathlib import Path
 
-from fastapi import FastAPI, File, Form, UploadFile, Request, HTTPException
+from fastapi import FastAPI, File, Form, UploadFile, Request, HTTPException, Depends, Header
 from fastapi.responses import HTMLResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 
 from app.models import AnalysisReport
 from app.modules.text_extractor import extract_from_file
@@ -18,6 +19,10 @@ from app.modules.image_forensics import analyze_images
 from app.modules.stats_checker import analyze_statistics
 from app.modules.metadata_checker import analyze_metadata
 from app.modules.paper_fetcher import fetch_from_doi, fetch_from_arxiv, fetch_from_url
+from app.database import init_db, get_db, User
+from app.auth import get_optional_user, router as auth_router
+from app.payment import router as payment_router
+from app.referral import router as referral_router
 
 UPLOAD_DIR = Path(__file__).parent.parent / "uploads"
 UPLOAD_DIR.mkdir(exist_ok=True)
@@ -28,6 +33,11 @@ app = FastAPI(
     version="1.0.0",
 )
 
+# Include routers
+app.include_router(auth_router)
+app.include_router(payment_router)
+app.include_router(referral_router)
+
 # Static files and templates
 STATIC_DIR = Path(__file__).parent / "static"
 TEMPLATES_DIR = Path(__file__).parent / "templates"
@@ -36,6 +46,11 @@ TEMPLATES_DIR.mkdir(exist_ok=True)
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
+
+
+@app.on_event("startup")
+def on_startup():
+    init_db()
 
 
 @app.get("/", response_class=HTMLResponse)
@@ -51,6 +66,8 @@ async def analyze_paper(
     doi: str = Form(None),
     url: str = Form(None),
     arxiv_id: str = Form(None),
+    authorization: str = Header(None),
+    db: Session = Depends(get_db),
 ):
     """Analyze a paper for academic integrity issues.
 
@@ -60,6 +77,13 @@ async def analyze_paper(
     - An arXiv ID
     - A direct URL to a paper
     """
+    # 检查用户登录和额度
+    user = get_optional_user(authorization, db)
+    if not user:
+        raise HTTPException(401, "请先登录后再使用分析功能")
+    if user.credits <= 0:
+        raise HTTPException(403, "分析次数已用完，请购买套餐")
+
     pdf_path = None
     paper_source = ""
     paper_metadata = {}
@@ -152,9 +176,14 @@ async def analyze_paper(
     except Exception:
         pass
 
+    # 扣减 credits
+    user.credits -= 1
+    db.commit()
+
     return JSONResponse({
         "status": "success",
         "report": report.model_dump(),
+        "remaining_credits": user.credits,
     })
 
 

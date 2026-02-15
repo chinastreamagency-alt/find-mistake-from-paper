@@ -8,84 +8,187 @@
 </head>
 <body>
     <div class="container">
-        <header>
-            <h1>学术诚信检查器</h1>
-            <p>上传论文或输入 DOI / arXiv ID / URL，全面检测学术不端行为</p>
-        </header>
+        <!-- 顶部导航 -->
+        <nav class="topnav">
+            <div class="topnav-brand" onclick="showSection('home')">学术诚信检查器</div>
+            <div class="topnav-links">
+                <a href="#" onclick="showSection('pricing')">定价</a>
+                <span id="navCredits" class="nav-credits" style="display:none"></span>
+                <!-- 未登录 -->
+                <div id="navGuest">
+                    <button class="btn btn-sm btn-outline" onclick="showAuthModal('login')">登录</button>
+                    <button class="btn btn-sm" onclick="showAuthModal('register')">注册</button>
+                </div>
+                <!-- 已登录 -->
+                <div id="navUser" style="display:none">
+                    <button class="btn btn-sm btn-outline" onclick="showSection('dashboard')">我的账户</button>
+                    <button class="btn btn-sm btn-ghost" onclick="logout()">退出</button>
+                </div>
+            </div>
+        </nav>
 
-        <!-- 上传区域 -->
-        <div class="upload-section">
-            <div class="tabs">
-                <button class="tab active" data-tab="upload">上传文件</button>
-                <button class="tab" data-tab="doi">DOI</button>
-                <button class="tab" data-tab="arxiv">arXiv</button>
-                <button class="tab" data-tab="url">URL</button>
+        <!-- ===== 首页 / 分析区 ===== -->
+        <div id="sectionHome">
+            <header>
+                <h1>学术诚信检查器</h1>
+                <p>上传论文或输入 DOI / arXiv ID / URL，全面检测学术不端行为</p>
+            </header>
+
+            <!-- 上传区域 -->
+            <div class="upload-section">
+                <div class="tabs">
+                    <button class="tab active" data-tab="upload">上传文件</button>
+                    <button class="tab" data-tab="doi">DOI</button>
+                    <button class="tab" data-tab="arxiv">arXiv</button>
+                    <button class="tab" data-tab="url">URL</button>
+                </div>
+
+                <form id="analyzeForm" enctype="multipart/form-data">
+                    <div class="tab-content active" id="tab-upload">
+                        <div class="drop-zone" id="dropZone">
+                            <div class="icon">&#128196;</div>
+                            <p>拖拽文件到此处，或点击选择文件</p>
+                            <p style="font-size: 0.8rem; margin-top: 0.3rem;">支持 PDF、DOCX、TXT 格式</p>
+                            <div class="file-name" id="fileName"></div>
+                        </div>
+                        <input type="file" id="fileInput" name="file" accept=".pdf,.docx,.doc,.txt" style="display:none">
+                    </div>
+                    <div class="tab-content" id="tab-doi">
+                        <label class="label">输入 DOI 标识符</label>
+                        <div class="input-group">
+                            <input type="text" name="doi" id="doiInput" placeholder="例: 10.1038/s41586-023-06600-9">
+                        </div>
+                    </div>
+                    <div class="tab-content" id="tab-arxiv">
+                        <label class="label">输入 arXiv ID</label>
+                        <div class="input-group">
+                            <input type="text" name="arxiv_id" id="arxivInput" placeholder="例: 2301.07041">
+                        </div>
+                    </div>
+                    <div class="tab-content" id="tab-url">
+                        <label class="label">输入论文 PDF 的直接链接</label>
+                        <div class="input-group">
+                            <input type="text" name="url" id="urlInput" placeholder="例: https://example.com/paper.pdf">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-block" id="submitBtn">开始分析</button>
+                </form>
             </div>
 
-            <form id="analyzeForm" enctype="multipart/form-data">
-                <!-- 文件上传 -->
-                <div class="tab-content active" id="tab-upload">
-                    <div class="drop-zone" id="dropZone">
-                        <div class="icon">&#128196;</div>
-                        <p>拖拽文件到此处，或点击选择文件</p>
-                        <p style="font-size: 0.8rem; margin-top: 0.3rem;">支持 PDF、DOCX、TXT 格式</p>
-                        <div class="file-name" id="fileName"></div>
-                    </div>
-                    <input type="file" id="fileInput" name="file" accept=".pdf,.docx,.doc,.txt" style="display:none">
-                </div>
+            <div class="error-msg" id="errorMsg"></div>
 
-                <!-- DOI 输入 -->
-                <div class="tab-content" id="tab-doi">
-                    <label class="label">输入 DOI 标识符</label>
-                    <div class="input-group">
-                        <input type="text" name="doi" id="doiInput"
-                               placeholder="例: 10.1038/s41586-023-06600-9">
-                    </div>
-                </div>
-
-                <!-- arXiv 输入 -->
-                <div class="tab-content" id="tab-arxiv">
-                    <label class="label">输入 arXiv ID</label>
-                    <div class="input-group">
-                        <input type="text" name="arxiv_id" id="arxivInput"
-                               placeholder="例: 2301.07041">
-                    </div>
-                </div>
-
-                <!-- URL 输入 -->
-                <div class="tab-content" id="tab-url">
-                    <label class="label">输入论文 PDF 的直接链接</label>
-                    <div class="input-group">
-                        <input type="text" name="url" id="urlInput"
-                               placeholder="例: https://example.com/paper.pdf">
-                    </div>
-                </div>
-
-                <button type="submit" class="btn btn-block" id="submitBtn">
-                    开始分析
-                </button>
-            </form>
-        </div>
-
-        <!-- 错误提示 -->
-        <div class="error-msg" id="errorMsg"></div>
-
-        <!-- 加载动画 -->
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>正在分析论文，请稍候...</p>
-            <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">
-                将依次进行：文本查重、引用核查、图片取证、统计验证、元数据检查
-            </p>
-        </div>
-
-        <!-- 分析报告 -->
-        <div class="report" id="report">
-            <div class="report-header">
-                <div class="report-title" id="reportTitle">分析报告</div>
-                <div class="stats-row" id="statsRow"></div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>正在分析论文，请稍候...</p>
+                <p style="font-size: 0.8rem; color: #666; margin-top: 0.5rem;">
+                    将依次进行：文本查重、引用核查、图片取证、统计验证、元数据检查
+                </p>
             </div>
-            <div id="moduleResults"></div>
+
+            <div class="report" id="report">
+                <div class="report-header">
+                    <div class="report-title" id="reportTitle">分析报告</div>
+                    <div class="stats-row" id="statsRow"></div>
+                </div>
+                <div id="moduleResults"></div>
+            </div>
+        </div>
+
+        <!-- ===== 定价页 ===== -->
+        <div id="sectionPricing" style="display:none">
+            <header>
+                <h1>选择套餐</h1>
+                <p>购买分析次数，开始检查你的论文</p>
+            </header>
+
+            <div class="pricing-grid" id="pricingGrid">
+                <div class="pricing-card">
+                    <div class="pricing-name">基础版 Basic</div>
+                    <div class="pricing-price">$9.90</div>
+                    <div class="pricing-desc">10 次论文分析</div>
+                    <ul class="pricing-features">
+                        <li>全部 5 大检测模块</li>
+                        <li>支持 PDF / DOCX / TXT</li>
+                        <li>DOI / arXiv / URL 导入</li>
+                    </ul>
+                    <button class="btn btn-block" onclick="buyPlan('basic')">购买</button>
+                </div>
+                <div class="pricing-card popular">
+                    <div class="pricing-badge">最受欢迎</div>
+                    <div class="pricing-name">专业版 Pro</div>
+                    <div class="pricing-price">$29.90</div>
+                    <div class="pricing-desc">50 次论文分析</div>
+                    <ul class="pricing-features">
+                        <li>全部 5 大检测模块</li>
+                        <li>支持 PDF / DOCX / TXT</li>
+                        <li>DOI / arXiv / URL 导入</li>
+                        <li>优先处理队列</li>
+                    </ul>
+                    <button class="btn btn-block" onclick="buyPlan('pro')">购买</button>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-name">无限版 Unlimited</div>
+                    <div class="pricing-price">$99.90</div>
+                    <div class="pricing-desc">999 次论文分析</div>
+                    <ul class="pricing-features">
+                        <li>全部 5 大检测模块</li>
+                        <li>支持 PDF / DOCX / TXT</li>
+                        <li>DOI / arXiv / URL 导入</li>
+                        <li>优先处理队列</li>
+                        <li>API 接入（即将推出）</li>
+                    </ul>
+                    <button class="btn btn-block" onclick="buyPlan('unlimited')">购买</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== 用户面板 ===== -->
+        <div id="sectionDashboard" style="display:none">
+            <header>
+                <h1>我的账户</h1>
+                <p id="dashEmail"></p>
+            </header>
+
+            <div class="dash-grid">
+                <!-- 额度卡片 -->
+                <div class="dash-card">
+                    <div class="dash-card-title">剩余分析次数</div>
+                    <div class="dash-card-value" id="dashCredits">0</div>
+                    <button class="btn btn-sm" onclick="showSection('pricing')" style="margin-top:0.8rem">购买更多</button>
+                </div>
+
+                <!-- 推广卡片 -->
+                <div class="dash-card wide">
+                    <div class="dash-card-title">推广返佣</div>
+                    <p class="dash-card-sub">分享你的专属链接，好友每次付费你获得 <strong>20%</strong> 返佣</p>
+                    <div class="referral-link-box">
+                        <input type="text" id="referralLink" readonly class="referral-input">
+                        <button class="btn btn-sm" onclick="copyReferralLink()">复制</button>
+                    </div>
+                    <div class="referral-code-display">
+                        你的推广码: <strong id="referralCodeDisplay"></strong>
+                    </div>
+                </div>
+
+                <!-- 推广统计 -->
+                <div class="dash-card">
+                    <div class="dash-card-title">推广统计</div>
+                    <div class="dash-stats">
+                        <div class="dash-stat">
+                            <span class="dash-stat-label">推荐人数</span>
+                            <span class="dash-stat-value" id="statReferred">0</span>
+                        </div>
+                        <div class="dash-stat">
+                            <span class="dash-stat-label">总佣金</span>
+                            <span class="dash-stat-value" id="statCommission">$0.00</span>
+                        </div>
+                        <div class="dash-stat">
+                            <span class="dash-stat-label">待结算</span>
+                            <span class="dash-stat-value" id="statPending">$0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <footer>
@@ -94,6 +197,54 @@
                 基于 ELA图片取证 / GRIM统计检验 / CrossRef引用验证 等开源技术
             </p>
         </footer>
+    </div>
+
+    <!-- ===== 登录/注册弹窗 ===== -->
+    <div class="modal-overlay" id="authModal">
+        <div class="modal">
+            <button class="modal-close" onclick="closeAuthModal()">&times;</button>
+            <div class="modal-tabs">
+                <button class="modal-tab active" data-modal-tab="login" onclick="switchModalTab('login')">登录</button>
+                <button class="modal-tab" data-modal-tab="register" onclick="switchModalTab('register')">注册</button>
+            </div>
+
+            <!-- 登录表单 -->
+            <form id="loginForm" class="modal-form">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="loginEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>密码</label>
+                    <input type="password" id="loginPassword" required placeholder="输入密码">
+                </div>
+                <div class="form-error" id="loginError"></div>
+                <button type="submit" class="btn btn-block">登录</button>
+            </form>
+
+            <!-- 注册表单 -->
+            <form id="registerForm" class="modal-form" style="display:none">
+                <div class="form-group">
+                    <label>邮箱</label>
+                    <input type="email" id="regEmail" required placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label>密码（至少6位）</label>
+                    <input type="password" id="regPassword" required placeholder="设置密码" minlength="6">
+                </div>
+                <div class="form-group">
+                    <label>姓名（选填）</label>
+                    <input type="text" id="regName" placeholder="你的姓名">
+                </div>
+                <div class="form-group">
+                    <label>推广码（选填）</label>
+                    <input type="text" id="regReferral" placeholder="好友的推广码">
+                </div>
+                <div class="form-error" id="regError"></div>
+                <button type="submit" class="btn btn-block">注册</button>
+                <p class="form-hint">注册即赠送 3 次免费分析</p>
+            </form>
+        </div>
     </div>
 
     <script src="/static/js/app.js"></script>
