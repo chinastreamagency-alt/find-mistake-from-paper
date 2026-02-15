@@ -11,6 +11,14 @@ from typing import Optional
 from app.models import Issue, IssueCategory, ModuleResult, SeverityLevel
 
 
+def _parse_p_value(raw: str) -> float:
+    """Parse p-value string like '.05', '0.05', '.001', '0.001'."""
+    raw = raw.strip().rstrip(".")
+    if raw.startswith("."):
+        return float("0" + raw)
+    return float(raw)
+
+
 def _grim_test(mean: float, n: int, decimals: int = 2) -> bool:
     """GRIM test: check if a reported mean is mathematically possible.
 
@@ -75,7 +83,7 @@ def extract_statistical_tests(text: str) -> list[dict]:
 
     # Pattern: t(df) = value, p < value  or  t(df) = value, p = value
     t_pattern = re.compile(
-        r't\s*\(\s*(\d+\.?\d*)\s*\)\s*=\s*(-?\d+\.?\d*)\s*[,;]\s*p\s*([<>=≤≥])\s*\.?(\d+\.?\d*)',
+        r't\s*\(\s*(\d+\.?\d*)\s*\)\s*=\s*(-?\d+\.?\d*)\s*[,;]\s*p\s*([<>=≤≥])\s*(\.?\d+\.?\d*)',
         re.IGNORECASE
     )
     for m in t_pattern.finditer(text):
@@ -84,13 +92,13 @@ def extract_statistical_tests(text: str) -> list[dict]:
             "df": float(m.group(1)),
             "statistic": float(m.group(2)),
             "p_relation": m.group(3),
-            "p_value": float(f"0.{m.group(4)}") if not m.group(4).startswith("0") else float(m.group(4)),
+            "p_value": _parse_p_value(m.group(4)),
             "raw": m.group(0),
         })
 
     # Pattern: F(df1, df2) = value, p ...
     f_pattern = re.compile(
-        r'F\s*\(\s*(\d+\.?\d*)\s*,\s*(\d+\.?\d*)\s*\)\s*=\s*(\d+\.?\d*)\s*[,;]\s*p\s*([<>=≤≥])\s*\.?(\d+\.?\d*)',
+        r'F\s*\(\s*(\d+\.?\d*)\s*,\s*(\d+\.?\d*)\s*\)\s*=\s*(\d+\.?\d*)\s*[,;]\s*p\s*([<>=≤≥])\s*(\.?\d+\.?\d*)',
         re.IGNORECASE
     )
     for m in f_pattern.finditer(text):
@@ -100,13 +108,13 @@ def extract_statistical_tests(text: str) -> list[dict]:
             "df2": float(m.group(2)),
             "statistic": float(m.group(3)),
             "p_relation": m.group(4),
-            "p_value": float(f"0.{m.group(5)}") if not m.group(5).startswith("0") else float(m.group(5)),
+            "p_value": _parse_p_value(m.group(5)),
             "raw": m.group(0),
         })
 
     # Pattern: χ²(df) = value, p ...  or chi2(df) = value
     chi2_pattern = re.compile(
-        r'[χχ]²?\s*\(\s*(\d+\.?\d*)\s*\)\s*=\s*(\d+\.?\d*)\s*[,;]\s*p\s*([<>=≤≥])\s*\.?(\d+\.?\d*)',
+        r'[χχ]²?\s*\(\s*(\d+\.?\d*)\s*\)\s*=\s*(\d+\.?\d*)\s*[,;]\s*p\s*([<>=≤≥])\s*(\.?\d+\.?\d*)',
         re.IGNORECASE
     )
     for m in chi2_pattern.finditer(text):
@@ -115,25 +123,24 @@ def extract_statistical_tests(text: str) -> list[dict]:
             "df": float(m.group(1)),
             "statistic": float(m.group(2)),
             "p_relation": m.group(3),
-            "p_value": float(f"0.{m.group(4)}") if not m.group(4).startswith("0") else float(m.group(4)),
+            "p_value": _parse_p_value(m.group(4)),
             "raw": m.group(0),
         })
 
     # Pattern: r = .value, p ...  (correlation)
     r_pattern = re.compile(
-        r'r\s*=\s*(-?\.?\d+\.?\d*)\s*[,;]\s*p\s*([<>=≤≥])\s*\.?(\d+\.?\d*)',
+        r'r\s*=\s*(-?\.?\d+\.?\d*)\s*[,;]\s*p\s*([<>=≤≥])\s*(\.?\d+\.?\d*)',
         re.IGNORECASE
     )
     for m in r_pattern.finditer(text):
         r_val = float(m.group(1))
-        if -1 <= r_val <= 1:
-            results.append({
-                "type": "r",
-                "statistic": r_val,
-                "p_relation": m.group(2),
-                "p_value": float(f"0.{m.group(3)}") if not m.group(3).startswith("0") else float(m.group(3)),
-                "raw": m.group(0),
-            })
+        results.append({
+            "type": "r",
+            "statistic": r_val,
+            "p_relation": m.group(2),
+            "p_value": _parse_p_value(m.group(3)),
+            "raw": m.group(0),
+        })
 
     return results
 
